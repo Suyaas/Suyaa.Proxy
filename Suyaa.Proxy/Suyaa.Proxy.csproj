@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Suyaa" Version="1.3.2307.19" />
+    <PackageReference Include="Suyaa" Version="1.3.2307.21" />
     <PackageReference Include="Suyaa.Hosting" Version="1.7.2307.26" />
   </ItemGroup>
 

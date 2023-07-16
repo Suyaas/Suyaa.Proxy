@@ -82,9 +82,10 @@ namespace Suyaa.Proxy.Basic.Proxies
             }
             // 获取response
             string targetUrl = string.Format(cfg.Url, HttpUtility.UrlEncode(url));
-            string content = await request.GetContentString();
-            logger.Info($"【Url】{targetUrl}【Data】{content}");
+            byte[] content = await request.GetContentBytes();
+            logger.Info($"【Url】{targetUrl}【Data】{Encoding.UTF8.GetString(content)}");
             using var resp = await sy.Http.PostResponseAsync(targetUrl, content, opt);
+            content = new byte[0];
             // 设置返回状态
             //response.Clear();
             response.StatusCode = (int)resp.StatusCode;
