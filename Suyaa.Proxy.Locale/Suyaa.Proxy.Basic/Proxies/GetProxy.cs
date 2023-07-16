@@ -47,8 +47,19 @@ namespace Suyaa.Proxy.Basic.Proxies
             var response = context.Response;
             // 拼接网址
             StringBuilder sb = new StringBuilder();
-            sb.Append(request.IsHttps ? "https://" : "http://");
-            sb.Append(request.Host);
+            var host = cfg.Hosts.Where(d => d.Host == request.Host.Host).FirstOrDefault();
+            if (host is null)
+            {
+                sb.Append(request.IsHttps ? "https://" : "http://");
+                sb.Append(request.Host);
+            }
+            else
+            {
+                sb.Append(host.IsHttps ? "https://" : "http://");
+                sb.Append(host.Host);
+                sb.Append(':');
+                sb.Append(host.Port);
+            }
             sb.Append(request.Path.HasValue ? request.Path.Value : "/");
             if (request.QueryString.HasValue) sb.Append(request.QueryString.Value);
             var url = sb.ToString();

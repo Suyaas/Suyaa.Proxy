@@ -18,6 +18,11 @@ namespace Suyaa.Proxy.Locale.Basic.Configs
         public string Url { get; set; } = string.Empty;
 
         /// <summary>
+        /// 主机配置
+        /// </summary>
+        public List<ProxyHostConfig> Hosts { get; set; } = new List<ProxyHostConfig>();
+
+        /// <summary>
         /// 默认配置
         /// </summary>
         public void Default()
@@ -25,5 +30,26 @@ namespace Suyaa.Proxy.Locale.Basic.Configs
             this.Url = "{0}";
             //throw new NotImplementedException();
         }
+    }
+
+    /// <summary>
+    /// 代理配置
+    /// </summary>
+    public class ProxyHostConfig
+    {
+        /// <summary>
+        /// 主机名
+        /// </summary>
+        public string Host { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 端口
+        /// </summary>
+        public int Port { get; set; } = 80;
+
+        /// <summary>
+        /// 是否安全通讯
+        /// </summary>
+        public bool IsHttps { get; set; } = false;
     }
 }
