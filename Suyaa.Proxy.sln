@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Suyaa.Proxy.Locale.Host", "Suyaa.Proxy.Locale\Suyaa.Proxy.Host\Suyaa.Proxy.Locale.Host.csproj", "{B08AD663-E411-454E-A033-194639FFFAEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Suyaa.Proxy.Locale", "Suyaa.Proxy.Locale", "{100FD5CB-12CF-43B0-ABD3-CCA1E1790F1B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Suyaa.Proxy.Locale.Basic", "Suyaa.Proxy.Locale\Suyaa.Proxy.Basic\Suyaa.Proxy.Locale.Basic.csproj", "{A879F111-46D1-4CC0-840B-6DB9CC59114F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Suyaa.Proxy.Remote", "Suyaa.Proxy.Remote", "{9EF12FA6-0475-4827-AC82-D334BD0EFE53}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Suyaa.Proxy.Remote.Basic", "Suyaa.Proxy.Remote\Suyaa.Proxy.Basic\Suyaa.Proxy.Remote.Basic.csproj", "{E71C09FF-D514-4B78-B3F8-3D9436FB9381}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Suyaa.Proxy.Remote.Host", "Suyaa.Proxy.Remote\Suyaa.Proxy.Host\Suyaa.Proxy.Remote.Host.csproj", "{3B69BE29-F377-49D9-AFB4-063900E973B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Suyaa.Proxy", "Suyaa.Proxy\Suyaa.Proxy.csproj", "{D3E20DA6-4CEF-47D5-A9B5-AC8FDDF7DC8B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B08AD663-E411-454E-A033-194639FFFAEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B08AD663-E411-454E-A033-194639FFFAEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B08AD663-E411-454E-A033-194639FFFAEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B08AD663-E411-454E-A033-194639FFFAEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A879F111-46D1-4CC0-840B-6DB9CC59114F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A879F111-46D1-4CC0-840B-6DB9CC59114F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A879F111-46D1-4CC0-840B-6DB9CC59114F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A879F111-46D1-4CC0-840B-6DB9CC59114F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E71C09FF-D514-4B78-B3F8-3D9436FB9381}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E71C09FF-D514-4B78-B3F8-3D9436FB9381}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E71C09FF-D514-4B78-B3F8-3D9436FB9381}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E71C09FF-D514-4B78-B3F8-3D9436FB9381}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B69BE29-F377-49D9-AFB4-063900E973B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B69BE29-F377-49D9-AFB4-063900E973B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B69BE29-F377-49D9-AFB4-063900E973B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B69BE29-F377-49D9-AFB4-063900E973B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3E20DA6-4CEF-47D5-A9B5-AC8FDDF7DC8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3E20DA6-4CEF-47D5-A9B5-AC8FDDF7DC8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3E20DA6-4CEF-47D5-A9B5-AC8FDDF7DC8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3E20DA6-4CEF-47D5-A9B5-AC8FDDF7DC8B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B08AD663-E411-454E-A033-194639FFFAEB} = {100FD5CB-12CF-43B0-ABD3-CCA1E1790F1B}
+		{A879F111-46D1-4CC0-840B-6DB9CC59114F} = {100FD5CB-12CF-43B0-ABD3-CCA1E1790F1B}
+		{E71C09FF-D514-4B78-B3F8-3D9436FB9381} = {9EF12FA6-0475-4827-AC82-D334BD0EFE53}
+		{3B69BE29-F377-49D9-AFB4-063900E973B5} = {9EF12FA6-0475-4827-AC82-D334BD0EFE53}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BCDC3CB4-10FC-45EC-AD27-92DBEE5CFC41}
+	EndGlobalSection
+EndGlobal
