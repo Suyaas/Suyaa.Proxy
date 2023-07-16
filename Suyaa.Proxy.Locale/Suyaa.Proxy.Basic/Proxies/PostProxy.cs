@@ -72,34 +72,37 @@ namespace Suyaa.Proxy.Basic.Proxies
                 if (header.Key.StartsWith(":")) continue;
                 if (header.Key == "Host") continue;
                 opt.Headers.Set(header.Key, header.Value);
-                logger.Info($"【Header】{header.Key} = {header.Value}");
+                logger.Info($"【Request.Header】{header.Key} = {header.Value}");
             }
             // 设置 cookie
             foreach (var cookie in request.Cookies)
             {
                 opt.Cookies.Set(cookie.Key, cookie.Value);
-                logger.Info($"【Cookie】{cookie.Key} = {cookie.Value}");
+                logger.Info($"【Request.Cookie】{cookie.Key} = {cookie.Value}");
             }
             // 获取response
             string targetUrl = string.Format(cfg.Url, HttpUtility.UrlEncode(url));
             byte[] content = await request.GetContentBytes();
-            logger.Info($"【Url】{targetUrl}【Data】{Encoding.UTF8.GetString(content)}");
+            logger.Info($"【Url】{targetUrl}【Data({content.Length})】{Encoding.UTF8.GetString(content)}");
             using var resp = await sy.Http.PostResponseAsync(targetUrl, content, opt);
             content = new byte[0];
             // 设置返回状态
             //response.Clear();
             response.StatusCode = (int)resp.StatusCode;
-            logger.Info($"【Status】{response.StatusCode}");
+            logger.Info($"【Response.Status】{response.StatusCode}");
             if (resp.IsSuccessStatusCode)
             {
                 // 处理Content-Type
                 var headers = resp.Content.Headers;
                 string? contentType = headers.ContentType?.ToString();
                 if (!contentType.IsNullOrWhiteSpace()) response.Headers.Add("Content-Type", contentType);
+                logger.Info($"【Response.Header】Content-Type = {contentType}");
                 string contentEncoding = string.Join(';', headers.ContentEncoding.ToString());
                 if (!contentEncoding.IsNullOrWhiteSpace()) response.Headers.Add("Content-Encoding", contentEncoding);
+                logger.Info($"【Response.Header】Content-Encoding = {contentEncoding}");
                 long? contentLength = headers.ContentLength;
                 if (contentLength.HasValue) response.Headers.Add("Content-Length", contentLength.Value.ToString());
+                logger.Info($"【Response.Header】Content-Length = {contentLength}");
                 byte[] buffer = new byte[4096];
                 using var stream = await resp.Content.ReadAsStreamAsync();
                 int len = 0;

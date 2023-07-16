@@ -7,10 +7,12 @@ using Suyaa.Net.Http;
 using Suyaa.Proxy.Locale.Basic.Configs;
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Reflection.PortableExecutable;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -71,13 +73,13 @@ namespace Suyaa.Proxy.Basic.Proxies
                 if (header.Key.StartsWith(":")) continue;
                 if (header.Key == "Host") continue;
                 opt.Headers.Set(header.Key, header.Value);
-                logger.Info($"【Header】{header.Key} = {header.Value}");
+                logger.Info($"【Request.Header】{header.Key} = {header.Value}");
             }
             // 设置 cookie
             foreach (var cookie in request.Cookies)
             {
                 opt.Cookies.Set(cookie.Key, cookie.Value);
-                logger.Info($"【Cookie】{cookie.Key} = {cookie.Value}");
+                logger.Info($"【Request.Cookie】{cookie.Key} = {cookie.Value}");
             }
             // 获取response
             string targetUrl = string.Format(cfg.Url, HttpUtility.UrlEncode(url));
@@ -88,24 +90,79 @@ namespace Suyaa.Proxy.Basic.Proxies
             response.StatusCode = (int)resp.StatusCode;
             if (resp.IsSuccessStatusCode)
             {
+                // 字符集啊
+                Encoding encoding = Encoding.UTF8;
+                if (host != null) encoding = Encoding.GetEncoding(host.Encoding);
                 // 处理Content-Type
                 var headers = resp.Content.Headers;
                 string? contentType = headers.ContentType?.ToString();
+                logger.Info($"【response.Header】Content-Type = {contentType}");
                 if (!contentType.IsNullOrWhiteSpace()) response.Headers.Add("Content-Type", contentType);
                 string contentEncoding = string.Join(';', headers.ContentEncoding.ToString());
-                if (!contentEncoding.IsNullOrWhiteSpace()) response.Headers.Add("Content-Encoding", contentEncoding);
-                long? contentLength = headers.ContentLength;
-                if (contentLength.HasValue) response.Headers.Add("Content-Length", contentLength.Value.ToString());
-                byte[] buffer = new byte[4096];
-                using var stream = await resp.Content.ReadAsStreamAsync();
-                int len = 0;
-                do
+                logger.Info($"【response.Header】Content-Encoding = {contentEncoding}");
+                bool isGZip = contentEncoding == "gzip";
+                // 判断是否为页面，为页面则进行文本处理
+                if (contentType == "text/html")
                 {
-                    len = stream.Read(buffer, 0, buffer.Length);
-                    if (len > 0) await response.Body.WriteAsync(buffer, 0, len);
-                } while (len > 0);
-                await response.Body.FlushAsync();
-                buffer = new byte[0];
+                    if (!isGZip)
+                    {
+                        if (!contentEncoding.IsNullOrWhiteSpace()) response.Headers.Add("Content-Encoding", contentEncoding);
+                    }
+                    List<byte> bytes = new List<byte>();
+                    byte[] buffer = new byte[4096];
+                    using var stream = await resp.Content.ReadAsStreamAsync();
+                    using var gZip = new GZipStream(stream, CompressionMode.Decompress);
+                    int len = 0;
+                    do
+                    {
+                        if (isGZip)
+                        {
+                            len = await gZip.ReadAsync(buffer, 0, buffer.Length);
+                        }
+                        else
+                        {
+                            len = await stream.ReadAsync(buffer, 0, buffer.Length);
+                        }
+
+                        if (len > 0)
+                        {
+                            bytes.AddRange(buffer.Take(len).ToList());
+                        }
+                    } while (len > 0);
+                    // 输出内容
+                    string body = encoding.GetString(bytes.ToArray());
+                    foreach (var item in cfg.Replaces)
+                    {
+                        body = body.Replace(item.Origin, item.Replace);
+                    }
+                    byte[] bodyBytes = encoding.GetBytes(body);
+                    // 设置内容长度
+                    long contentLength = bodyBytes.Length;
+                    response.Headers.Add("Content-Length", contentLength.ToString());
+                    logger.Info($"【response.Header】Content-Length = {contentLength}");
+                    await response.Body.WriteAsync(bodyBytes.ToArray(), 0, bodyBytes.Length);
+                    await response.Body.FlushAsync();
+                    buffer = new byte[0];
+                    bodyBytes = new byte[0];
+                    bytes.Clear();
+                }
+                else
+                {
+                    long? contentLength = headers.ContentLength;
+                    if (contentLength.HasValue) response.Headers.Add("Content-Length", contentLength.Value.ToString());
+                    if (!contentEncoding.IsNullOrWhiteSpace()) response.Headers.Add("Content-Encoding", contentEncoding);
+                    logger.Info($"【response.Header】Content-Length = {contentLength}");
+                    byte[] buffer = new byte[4096];
+                    using var stream = await resp.Content.ReadAsStreamAsync();
+                    int len = 0;
+                    do
+                    {
+                        len = stream.Read(buffer, 0, buffer.Length);
+                        if (len > 0) await response.Body.WriteAsync(buffer, 0, len);
+                    } while (len > 0);
+                    await response.Body.FlushAsync();
+                    buffer = new byte[0];
+                }
             }
         }
 

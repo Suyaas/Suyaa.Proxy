@@ -7,6 +7,8 @@ using Suyaa;
 using Suyaa.Proxy.Host;
 using System.Diagnostics;
 
+System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
 sy.Logger.GetCurrentLogger()
     .Use((string message) =>
     {
