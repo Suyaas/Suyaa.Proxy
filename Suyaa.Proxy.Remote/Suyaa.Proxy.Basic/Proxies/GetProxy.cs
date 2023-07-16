@@ -80,12 +80,9 @@ namespace Suyaa.Proxy.Basic.Proxies
                 do
                 {
                     len = stream.Read(buffer, 0, buffer.Length);
-                    if (len > 0)
-                    {
-                        await response.Body.WriteAsync(buffer, 0, len);
-                        await response.Body.FlushAsync();
-                    }
+                    if (len > 0) await response.Body.WriteAsync(buffer, 0, len);
                 } while (len > 0);
+                await response.Body.FlushAsync();
                 buffer = new byte[0];
             }
         }
