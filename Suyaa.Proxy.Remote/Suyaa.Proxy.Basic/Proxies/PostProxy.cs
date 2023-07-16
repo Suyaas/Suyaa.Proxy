@@ -62,7 +62,7 @@ namespace Suyaa.Proxy.Basic.Proxies
             }
             // 获取应答器
             byte[] content = await request.GetContentBytes();
-            logger.Info($"【Url】{url}【Data】{content}");
+            logger.Info($"【Url】{url}【Data】{Encoding.UTF8.GetString(content)}");
             using var resp = await sy.Http.PostResponseAsync(url, content, opt);
             content = new byte[0];
             // 设置返回状态
