@@ -58,9 +58,19 @@ namespace Suyaa.Proxy.Basic.Proxies
             else
             {
                 sb.Append(host.IsHttps ? "https://" : "http://");
-                sb.Append(host.Host);
-                sb.Append(':');
-                sb.Append(host.Port);
+                if (host.TransHost.IsNullOrWhiteSpace())
+                {
+                    sb.Append(host.Host);
+                }
+                else
+                {
+                    sb.Append(host.TransHost);
+                }
+                if (host.Port.HasValue)
+                {
+                    sb.Append(':');
+                    sb.Append(host.Port);
+                }
             }
             sb.Append(request.Path.HasValue ? request.Path.Value : "/");
             if (request.QueryString.HasValue) sb.Append(request.QueryString.Value);
@@ -100,6 +110,9 @@ namespace Suyaa.Proxy.Basic.Proxies
                 if (!contentType.IsNullOrWhiteSpace()) response.Headers.Add("Content-Type", contentType);
                 string contentEncoding = string.Join(';', headers.ContentEncoding.ToString());
                 logger.Info($"【response.Header】Content-Encoding = {contentEncoding}");
+                string? contentDisposition = headers.ContentDisposition?.ToString();
+                if (!contentDisposition.IsNullOrWhiteSpace()) response.Headers.Add("Content-Disposition", contentDisposition);
+                logger.Info($"【Response.Header】Content-Disposition = {contentDisposition}");
                 bool isGZip = contentEncoding == "gzip";
                 // 判断是否为页面，为页面则进行文本处理
                 if (contentType == "text/html")
@@ -131,9 +144,13 @@ namespace Suyaa.Proxy.Basic.Proxies
                     } while (len > 0);
                     // 输出内容
                     string body = encoding.GetString(bytes.ToArray());
-                    foreach (var item in cfg.Replaces)
+                    // 执行内容替换
+                    if (host != null)
                     {
-                        body = body.Replace(item.Origin, item.Replace);
+                        foreach (var item in host.Replaces)
+                        {
+                            body = body.Replace(item.Origin, item.Replace);
+                        }
                     }
                     byte[] bodyBytes = encoding.GetBytes(body);
                     // 设置内容长度

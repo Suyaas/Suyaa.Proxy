@@ -9,6 +9,8 @@ using System.Diagnostics;
 
 System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 
+Console.Title = sy.Assembly.FullName;
+
 sy.Logger.GetCurrentLogger()
     .Use((string message) =>
     {

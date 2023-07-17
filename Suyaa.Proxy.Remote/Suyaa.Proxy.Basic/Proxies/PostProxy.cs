@@ -74,10 +74,16 @@ namespace Suyaa.Proxy.Basic.Proxies
                 var headers = resp.Content.Headers;
                 string? contentType = headers.ContentType?.ToString();
                 if (!contentType.IsNullOrWhiteSpace()) response.Headers.Add("Content-Type", contentType);
+                logger.Info($"【Response.Header】Content-Type = {contentType}");
                 string contentEncoding = string.Join(';', headers.ContentEncoding.ToString());
                 if (!contentEncoding.IsNullOrWhiteSpace()) response.Headers.Add("Content-Encoding", contentEncoding);
+                logger.Info($"【Response.Header】Content-Encoding = {contentEncoding}");
                 long? contentLength = headers.ContentLength;
                 if (contentLength.HasValue) response.Headers.Add("Content-Length", contentLength.Value.ToString());
+                logger.Info($"【Response.Header】Content-Length = {contentLength}");
+                string? contentDisposition = headers.ContentDisposition?.ToString();
+                if (!contentDisposition.IsNullOrWhiteSpace()) response.Headers.Add("Content-Disposition", contentDisposition);
+                logger.Info($"【Response.Header】Content-Disposition = {contentDisposition}");
                 byte[] buffer = new byte[4096];
                 using var stream = await resp.Content.ReadAsStreamAsync();
                 int len = 0;

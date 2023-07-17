@@ -23,11 +23,6 @@ namespace Suyaa.Proxy.Locale.Basic.Configs
         public List<ProxyHostConfig> Hosts { get; set; } = new List<ProxyHostConfig>();
 
         /// <summary>
-        /// 替换字符
-        /// </summary>
-        public List<ProxyReplaceConfig> Replaces { get; set; } = new List<ProxyReplaceConfig>();
-
-        /// <summary>
         /// 默认配置
         /// </summary>
         public void Default()
@@ -48,9 +43,14 @@ namespace Suyaa.Proxy.Locale.Basic.Configs
         public string Host { get; set; } = string.Empty;
 
         /// <summary>
+        /// 转换主机名
+        /// </summary>
+        public string? TransHost { get; set; }
+
+        /// <summary>
         /// 端口
         /// </summary>
-        public int Port { get; set; } = 80;
+        public int? Port { get; set; }
 
         /// <summary>
         /// 是否安全通讯
@@ -61,6 +61,11 @@ namespace Suyaa.Proxy.Locale.Basic.Configs
         /// 字符编码
         /// </summary>
         public string Encoding { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 替换字符
+        /// </summary>
+        public List<ProxyReplaceConfig> Replaces { get; set; } = new List<ProxyReplaceConfig>();
     }
 
     /// <summary>

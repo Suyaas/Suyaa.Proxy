@@ -57,9 +57,19 @@ namespace Suyaa.Proxy.Basic.Proxies
             else
             {
                 sb.Append(host.IsHttps ? "https://" : "http://");
-                sb.Append(host.Host);
-                sb.Append(':');
-                sb.Append(host.Port);
+                if (host.TransHost.IsNullOrWhiteSpace())
+                {
+                    sb.Append(host.Host);
+                }
+                else
+                {
+                    sb.Append(host.TransHost);
+                }
+                if (host.Port.HasValue)
+                {
+                    sb.Append(':');
+                    sb.Append(host.Port);
+                }
             }
             sb.Append(request.Path.HasValue ? request.Path.Value : "/");
             if (request.QueryString.HasValue) sb.Append(request.QueryString.Value);
@@ -103,6 +113,9 @@ namespace Suyaa.Proxy.Basic.Proxies
                 long? contentLength = headers.ContentLength;
                 if (contentLength.HasValue) response.Headers.Add("Content-Length", contentLength.Value.ToString());
                 logger.Info($"【Response.Header】Content-Length = {contentLength}");
+                string? contentDisposition = headers.ContentDisposition?.ToString();
+                if (!contentDisposition.IsNullOrWhiteSpace()) response.Headers.Add("Content-Disposition", contentDisposition);
+                logger.Info($"【Response.Header】Content-Disposition = {contentDisposition}");
                 byte[] buffer = new byte[4096];
                 using var stream = await resp.Content.ReadAsStreamAsync();
                 int len = 0;
@@ -111,6 +124,7 @@ namespace Suyaa.Proxy.Basic.Proxies
                     len = stream.Read(buffer, 0, buffer.Length);
                     if (len > 0) await response.Body.WriteAsync(buffer, 0, len);
                 } while (len > 0);
+
                 await response.Body.FlushAsync();
                 buffer = new byte[0];
             }
